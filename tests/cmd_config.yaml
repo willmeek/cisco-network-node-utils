@@ -53,6 +53,12 @@ nexus:
               description test-portchannel
               no bfd echo
 
+  feature-config-with-quotes:
+    setup: |
+           no ip community-list expanded IXIA
+    command: |
+             ip community-list expanded IXIA seq 1 permit "100:666"
+
 ios_xr:
   name-server:
     command: |

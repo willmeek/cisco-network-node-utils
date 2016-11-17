@@ -72,6 +72,7 @@ class TestCommandConfig < CiscoTestCase
       v.each do |k1, v1|
         next if k1 == 'nvgen'
         config(v1) if k1 == 'setup'
+        next if k1 == 'setup'
         # Send commands
         cfg_cmd_str = "#{v1.gsub(/^/, '  ')}"
         cfg_string = remove_whitespace(cfg_cmd_str)

@@ -114,6 +114,8 @@ module Cisco
           submode = @configuration[command]
           fail StopIteration, 'Could not find submode.' if submode.nil?
 
+          # Remove any double quotes '"' from the command.
+          command = command.tr('"', ' ').strip
           if special_command?(command)
             # match special exit/end command
             existing << config_line
