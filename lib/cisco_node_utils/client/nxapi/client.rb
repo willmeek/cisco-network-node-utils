@@ -17,6 +17,7 @@
 # limitations under the License.
 
 require_relative '../client'
+require 'etc'
 require 'json'
 require 'net/http'
 
@@ -220,10 +221,26 @@ class Cisco::Client::NXAPI < Cisco::Client
   end
   private :req
 
+  def query_user
+    user = 'admin'
+    current = '/proc/self/fd/0'
+    return user unless FileTest.exist?(current)
+
+    # Determine effective user
+    current = File.readlink(current) if STDOUT.isatty
+    if File.lstat(current).symlink?
+      user = Etc.getpwuid(File.lstat(current).uid).name
+    else
+      user = Etc.getpwuid(File.stat(current).uid).name
+    end
+    user
+  end
+
   def build_http_request(type, command_string)
     if @username.nil? || @password.nil?
       request = Net::HTTP::Post.new(NXAPI_UDS_URI_PATH)
-      request['Cookie'] = 'nxapi_auth=admin:local'
+      request['Cookie'] = 'nxapi_auth=#{query_user}:local'
+      puts "Cookie: #{request['Cookie']}"
     else
       request = Net::HTTP::Post.new(NXAPI_REMOTE_URI_PATH)
       request.basic_auth("#{@username}", "#{@password}")
