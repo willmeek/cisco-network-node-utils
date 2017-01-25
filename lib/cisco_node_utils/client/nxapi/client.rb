@@ -239,7 +239,7 @@ class Cisco::Client::NXAPI < Cisco::Client
   def build_http_request(type, command_string)
     if @username.nil? || @password.nil?
       request = Net::HTTP::Post.new(NXAPI_UDS_URI_PATH)
-      request['Cookie'] = 'nxapi_auth=#{query_user}:local'
+      request['Cookie'] = "nxapi_auth=#{query_user}:local"
       puts "Cookie: #{request['Cookie']}"
     else
       request = Net::HTTP::Post.new(NXAPI_REMOTE_URI_PATH)
