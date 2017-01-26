@@ -29,11 +29,13 @@ class Cisco::Client
   @@clients = [] # rubocop:disable Style/ClassVars
 
   def self.clients
+    puts "__method__: #{__method__}   __callee__:#{__callee__} "
     @@clients
   end
 
   # Each subclass should call this method to register itself.
   def self.register_client(client)
+    puts "__method__: #{__method__}   __callee__:#{__callee__} "
     @@clients << client
   end
 
@@ -42,6 +44,7 @@ class Cisco::Client
   def initialize(data_formats: [],
                  platform:     nil,
                  **kwargs)
+    puts "__method__: #{__method__}   __callee__:#{__callee__} "
     if self.class == Cisco::Client
       fail NotImplementedError, 'Cisco::Client is an abstract class. ' \
         "Instantiate one of #{@@clients} or use Cisco::Client.create() instead"
@@ -60,6 +63,7 @@ class Cisco::Client
   end
 
   def self.validate_args(**kwargs)
+    puts "__method__: #{__method__}   __callee__:#{__callee__} "
     host = kwargs[:host]
     unless host.nil?
       fail TypeError, 'invalid address' unless host.is_a?(String)
@@ -78,11 +82,13 @@ class Cisco::Client
   end
 
   def supports?(data_format)
+    puts "__method__: #{__method__}   __callee__:#{__callee__} "
     data_formats.include?(data_format)
   end
 
   # Try to create an instance of an appropriate subclass
   def self.create(environment_name=nil)
+    puts "__method__: #{__method__}   __callee__:#{__callee__} "
     fail 'No client implementations available!' if clients.empty?
     debug "Trying to establish client connection. clients = #{clients}"
     environment = Cisco::Environment.environment(environment_name)
@@ -104,6 +110,7 @@ class Cisco::Client
   end
 
   def self.handle_errors(errors)
+    puts "__method__: #{__method__}   __callee__:#{__callee__} "
     # ClientError means we tried to connect but failed,
     # so it's 'more significant' than input validation errors.
     client_errors = errors.select { |e| e.kind_of? Cisco::ClientError }
@@ -128,23 +135,28 @@ class Cisco::Client
   end
 
   def to_s
+    puts "__method__: #{__method__}   __callee__:#{__callee__} "
     @address.to_s
   end
 
   def inspect
+    puts "__method__: #{__method__}   __callee__:#{__callee__} "
     "<#{self.class} of #{@address}>"
   end
 
   def cache_enable?
+    puts "__method__: #{__method__}   __callee__:#{__callee__} "
     @cache_enable
   end
 
   def cache_enable=(enable)
+    puts "__method__: #{__method__}   __callee__:#{__callee__} "
     @cache_enable = enable
     cache_flush unless enable
   end
 
   def cache_auto?
+    puts "__method__: #{__method__}   __callee__:#{__callee__} "
     @cache_auto
   end
 
@@ -156,6 +168,7 @@ class Cisco::Client
   # whenever a set() is called, but providers may also call this
   # to explicitly force the cache to be cleared.
   def cache_flush
+    puts "__method__: #{__method__}   __callee__:#{__callee__} "
     # to be implemented by subclasses
   end
 
@@ -172,6 +185,7 @@ class Cisco::Client
           context:     nil,
           values:      nil,
           **_kwargs)
+    puts "__method__: #{__method__}   __callee__:#{__callee__} "
     # subclasses will generally want to call Client.munge_to_array()
     # on context and/or values before calling super()
     fail Cisco::RequestNotSupported unless self.supports?(data_format)
@@ -206,6 +220,7 @@ class Cisco::Client
           **_kwargs)
     # subclasses will generally want to call Client.munge_to_array()
     # on context and/or value before calling super()
+    puts "__method__: #{__method__}   __callee__:#{__callee__} "
     fail Cisco::RequestNotSupported unless self.supports?(data_format)
     Cisco::Logger.debug("Get state using data format '#{data_format}'")
     Cisco::Logger.debug("  executing command:\n    #{command}") \
@@ -223,6 +238,7 @@ class Cisco::Client
   # If the client supports multiple formats, and a given feature or property
   # can be managed by multiple formats, the list order indicates preference.
   def data_formats=(data_formats)
+    puts "__method__: #{__method__}   __callee__:#{__callee__} "
     data_formats = [data_formats] unless data_formats.is_a?(Array)
     unknown = data_formats - Cisco::DATA_FORMATS
     fail ArgumentError, "unknown data formats: #{unknown}" unless unknown.empty?
@@ -231,6 +247,7 @@ class Cisco::Client
 
   # Set the platform of the node managed by this client.
   def platform=(platform)
+    puts "__method__: #{__method__}   __callee__:#{__callee__} "
     fail ArgumentError, "unknown platform #{platform}" \
       unless Cisco::PLATFORMS.include?(platform)
     @platform = platform
