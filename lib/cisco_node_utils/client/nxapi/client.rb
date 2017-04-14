@@ -127,6 +127,12 @@ class Cisco::Client::NXAPI < Cisco::Client
     context = munge_to_array(context)
     values = munge_to_array(values)
     super
+    File.open('./set_commands', 'a') do |file|
+      file.puts("--------------------------------------------------------\n")
+      file.puts("#{context}") unless context.size == 0
+      file.puts("#{values}")
+      file.puts("--------------------------------------------------------\n")
+    end
     req('cli_conf', context + values)
   end
 
@@ -153,6 +159,9 @@ class Cisco::Client::NXAPI < Cisco::Client
           **_kwargs)
     context = munge_to_array(context)
     super
+    File.open('./get_commands', 'a') do |file|
+      file.puts("#{command}")
+    end
     if data_format == :cli
       output = req('cli_show_ascii', command)
       return self.class.filter_cli(cli_output: output,
