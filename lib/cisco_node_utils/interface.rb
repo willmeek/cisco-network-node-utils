@@ -145,7 +145,7 @@ module Cisco
     end
 
     def cache_prop_grps(array)
-      get_prop_grp("interface", array)
+      get_prop_grp('interface', array)
     end
 
     def pvlan_enable
