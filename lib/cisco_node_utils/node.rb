@@ -64,6 +64,10 @@ module Cisco
       massage(data, ref)
     end
 
+    def get_prop_grp(feature, arr)
+      @cmd_ref.get_property_groups(feature, arr)
+    end
+
     # The yaml file may specifiy an Array as the get_value to drill down into
     # nxapi_structured table output.  The table may contain multiple rows but
     # only one of the rows has the interesting data.

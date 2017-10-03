@@ -107,5 +107,9 @@ module Cisco
     def nexus?
       platform == :nexus
     end
+
+    def get_prop_grp(feature, arr)
+      node.get_prop_grp(feature, arr)
+    end
   end
 end

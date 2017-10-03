@@ -144,6 +144,10 @@ module Cisco
       config_set('interface', 'destroy', name: @name)
     end
 
+    def cache_prop_grps(array)
+      get_prop_grp("interface", array)
+    end
+
     def pvlan_enable
       switchport_enable
       Feature.private_vlan_enable

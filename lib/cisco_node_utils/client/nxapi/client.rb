@@ -201,8 +201,10 @@ class Cisco::Client::NXAPI < Cisco::Client
 
     debug("Input (#{type}): \'#{command}\'")
     if cache_enable? && @cache_hash[type] && @cache_hash[type][command]
+      debug('cache hit')
       return @cache_hash[type][command]
     end
+    debug('cache miss') if type != 'cli_conf'
 
     # form the request
     request = build_http_request(type, command)

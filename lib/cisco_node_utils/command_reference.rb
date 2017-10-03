@@ -371,6 +371,30 @@ module Cisco
       build_cmd_ref
     end
 
+    def get_property_groups(feature, prop_arr)
+      ret_grp = []
+      return ret_grp if prop_arr.empty?
+      grp_arr = []
+      prop_arr.each do |prop|
+        grp_arr << prop if @hash[feature][prop.to_s].nil?
+      end
+      prop_arr -= grp_arr
+      ret_grp << grp_arr
+      until prop_arr.empty?
+        grp_arr = []
+        prop = prop_arr.shift
+        grp_arr << prop
+        gc = @hash[feature][prop.to_s].hash['get_command']
+        prop_arr.each do |property|
+          grp_arr << property if
+            gc == @hash[feature][property.to_s].hash['get_command']
+        end
+        prop_arr -= grp_arr
+        ret_grp << grp_arr
+      end
+      ret_grp
+    end
+
     # Build complete reference hash.
     def build_cmd_ref
       # Example id's: N3K-C3048TP-1GE, N3K-C3064PQ-10GE, N7K-C7009, N7K-C7009

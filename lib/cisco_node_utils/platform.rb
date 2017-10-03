@@ -123,7 +123,7 @@ module Cisco
     #                     'sn'    => 'SAL1812NTBP' },
     #       'Slot 2' => { ... }}
     def self.inventory_of(type)
-      node.cache_flush # TODO: investigate why this is needed
+      # node.cache_flush # TODO: investigate why this is needed
       inv = config_get('inventory', 'all')
       inv_hsh = {}
       return inv_hsh if inv.nil?
