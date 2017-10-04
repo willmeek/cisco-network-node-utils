@@ -100,7 +100,7 @@ module Cisco
     #       'vid'   => 'V02',
     #       'sn'    => 'SAL1812NTBP' }
     def self.chassis
-      node.cache_flush # TODO: investigate why this is needed
+      # node.cache_flush # TODO: investigate why this is needed
       all = config_get('inventory', 'chassis')
       return nil if all.nil?
 
