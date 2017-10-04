@@ -94,7 +94,7 @@ module Cisco
         ref.hash['drill_down'] = true
         get_args[:value] = nil
         # what is this cache_flush for?
-        # cache_flush
+        cache_flush
       end
       [get_args, ref]
     end
