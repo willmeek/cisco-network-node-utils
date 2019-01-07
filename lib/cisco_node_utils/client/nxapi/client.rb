@@ -60,7 +60,7 @@ class Cisco::Client::NXAPI < Cisco::Client
     else
       # Remote connection. This is primarily expected
       # when running e.g. from a Unix server as part of Minitest.
-      @http = Net::HTTP.new(@host)
+      @http = Net::HTTP.new(@host, 443)
     end
     # The default read time out is 60 seconds, which may be too short for
     # scaled configuration to apply. Change it to 300 seconds, which is
@@ -205,14 +205,19 @@ class Cisco::Client::NXAPI < Cisco::Client
     request = build_http_request(type, command)
 
     # send the request and get the response
-    debug("Sending HTTP request to NX-API at #{@http.address}:\n" \
+    debug("Sending HTTPS request to NX-API at #{@http.address}:\n" \
           "#{request.to_hash}\n#{request.body}")
     read_timeout_check(request)
     tries = 2
     begin
       # Explicitly use http to avoid EOFError
       # http://stackoverflow.com/a/23080693
-      @http.use_ssl = false
+debug('use https')
+      @http.use_ssl = true
+options_mask = OpenSSL::SSL::OP_NO_SSLv2 + OpenSSL::SSL::OP_NO_SSLv3
+#@http.ssl_options = options_mask
+@http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
       response = @http.request(request)
     rescue Errno::ECONNREFUSED, Errno::ECONNRESET
       emsg = 'Connection refused or reset. Is the NX-API feature enabled?'
